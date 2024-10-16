@@ -37,6 +37,17 @@ void print_md5_hash(md5_hash_t hash) {
   write_stdout("\n", 1);
 }
 
+md5_message_chunk_word_t
+left_rotate(md5_message_chunk_word_t word, md5_message_chunk_word_t _bits) {
+  const unsigned int word_size = 32;
+  const md5_message_chunk_word_t bits = _bits % 32;
+
+  const unsigned int word_bits = ((0x1 << bits) - 1) << (word_size - bits);
+  const unsigned int rotating_chunk = (word & word_bits) >> (word_size - bits);
+
+  return (word << bits) | rotating_chunk;
+}
+
 int main(void) {
   md5_hash_t hash = {
       .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
