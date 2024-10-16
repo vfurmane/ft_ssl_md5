@@ -1,10 +1,12 @@
 #include "unistd.h"
 
+typedef unsigned int md5_message_chunk_word_t;
+
 typedef struct md5_hash_s {
-  unsigned int a;
-  unsigned int b;
-  unsigned int c;
-  unsigned int d;
+  md5_message_chunk_word_t a;
+  md5_message_chunk_word_t b;
+  md5_message_chunk_word_t c;
+  md5_message_chunk_word_t d;
 } md5_hash_t;
 
 ssize_t write_stdout(const void *buf, size_t n) {
