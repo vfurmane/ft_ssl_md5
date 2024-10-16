@@ -1,5 +1,12 @@
 #include "unistd.h"
 
+typedef struct md5_hash_s {
+  unsigned int a;
+  unsigned int b;
+  unsigned int c;
+  unsigned int d;
+} md5_hash_t;
+
 ssize_t write_stdout(const void *buf, size_t n) {
   return write(STDOUT_FILENO, buf, n);
 }
@@ -20,20 +27,20 @@ void print_32hex(unsigned int nbr) {
   write_stdout(buffer, buffer_size);
 }
 
-void print_md5_output(
-    unsigned int a, unsigned int b, unsigned int c, unsigned int d
-) {
-  print_32hex(a);
-  print_32hex(b);
-  print_32hex(c);
-  print_32hex(d);
+void print_md5_hash(md5_hash_t hash) {
+  print_32hex(hash.a);
+  print_32hex(hash.b);
+  print_32hex(hash.c);
+  print_32hex(hash.d);
   write_stdout("\n", 1);
 }
 
 int main(void) {
-  const unsigned int nbr = 0xeeeeeeee;
+  md5_hash_t hash = {
+      .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
+  };
 
-  print_md5_output(nbr, 1, 2, 3);
+  print_md5_hash(hash);
 
   return 0;
 }
