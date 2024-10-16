@@ -1,0 +1,9 @@
+# Executables
+ft_ssl
+
+# Object files
+*.o
+
+# IDE and editors
+/.idea/
+/.vscode/
