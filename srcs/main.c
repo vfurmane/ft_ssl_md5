@@ -1,6 +1,7 @@
+#include "md5/message.h"
+#include "stdlib.h"
 #include "unistd.h"
-
-typedef unsigned int md5_message_chunk_word_t;
+#include "utils.h"
 
 typedef struct md5_hash_s {
   md5_message_chunk_word_t a;
@@ -52,8 +53,11 @@ int main(void) {
   md5_hash_t hash = {
       .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
   };
+  md5_message_t message = allocate_message_from_string("hello, world!");
 
   print_md5_hash(hash);
+
+  destroy_message(&message);
 
   return 0;
 }
