@@ -1,5 +1,5 @@
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef MD5_MESSAGE_H
+#define MD5_MESSAGE_H
 
 #include "stdlib.h"
 #include "utils.h"
