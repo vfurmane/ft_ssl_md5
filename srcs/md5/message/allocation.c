@@ -4,7 +4,8 @@ md5_padded_buffer_t allocate_buffer_from_string_with_padding(const char *str) {
   const size_t len = ft_strlen(str);
   const size_t bits_len = len * 8;
   const size_t remainder_chunks_nbr = (bits_len + 1 + 64) % 512;
-  const size_t full_chunks_nbr = len / 512 + (remainder_chunks_nbr > 0 ? 1 : 0);
+  const size_t full_chunks_nbr =
+      bits_len / 512 + (remainder_chunks_nbr > 0 ? 1 : 0);
   const size_t new_len = full_chunks_nbr * 512 / 8;
 
   unsigned char *b = malloc(new_len);
