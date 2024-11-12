@@ -64,7 +64,7 @@ md5_hash_t md5_hash(md5_message_t message) {
       .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
   };
   for (size_t i = 0; i < message.chunks; ++i) {
-    md5_message_chunk_t message_chunk = message.b + i;
+    md5_message_chunk_t message_chunk = message.b + i * 16;
 
     md5_hash_t hash = base_hash;
     for (size_t j = 0; j < 64; ++j) {
