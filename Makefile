@@ -10,10 +10,11 @@ OBJS		= $(SRCS:.c=.o)
 
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror
+DEBUG_FLAGS	:=
 RM			= rm -f
 
 %.o:		%.c
-	$(CC) $(CFLAGS) -c $< $(INC_DIRS) -o $@
+	$(CC) $(CFLAGS) $(DEBUG_FLAGS) -g3 -c $< $(INC_DIRS) -o $@
 
 all:		$(NAME)
 
