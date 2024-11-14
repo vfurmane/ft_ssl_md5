@@ -3,6 +3,7 @@
 
 #include "bits.h"
 #include "md5/message.h"
+#include "print.h"
 
 typedef struct md5_hash_s {
   md5_message_chunk_word_t a;
@@ -33,5 +34,7 @@ static const unsigned int per_round_shifts[] = {
 };
 
 md5_hash_t md5_hash(md5_message_t message);
+
+void print_md5_hash(md5_hash_t hash);
 
 #endif

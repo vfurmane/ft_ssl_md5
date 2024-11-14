@@ -1,14 +1,6 @@
 #include "md5/hash.h"
 #include "print.h"
 
-void print_md5_hash(md5_hash_t hash) {
-  print_32hex(hash.a);
-  print_32hex(hash.b);
-  print_32hex(hash.c);
-  print_32hex(hash.d);
-  write_stdout("\n", 1);
-}
-
 int main(void) {
   md5_message_t message = allocate_message_from_string("hello, world!");
 

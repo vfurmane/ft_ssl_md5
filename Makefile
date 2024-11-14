@@ -2,7 +2,7 @@ NAME		= ft_ssl
 SRCS		= $(addprefix srcs/, main.c \
 				$(addprefix bits/, buffer_bswap_32.c left_rotate.c) \
 				$(addprefix md5/, \
-					$(addprefix hash/, algorithm.c) \
+					$(addprefix hash/, algorithm.c print.c) \
 					$(addprefix message/, allocation.c)) \
 				$(addprefix print/, binary.c hexadecimal.c write.c) \
 				$(addprefix utils/, ft_bswap.c ft_bzero.c ft_memcpy.c ft_strlen.c))
