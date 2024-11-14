@@ -7,4 +7,6 @@ size_t write_stdout(const void *buf, size_t n);
 
 void print_8bin(char nbr);
 
+void print_32hex(unsigned int nbr);
+
 #endif
