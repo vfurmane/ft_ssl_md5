@@ -9,5 +9,4 @@ void print_8bin(char nbr) {
   }
 
   write_stdout(buffer, buffer_size);
-  write_stdout(" ", 1);
 }
