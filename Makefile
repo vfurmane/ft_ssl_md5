@@ -1,6 +1,6 @@
 NAME		= ft_ssl
 SRCS		= $(addprefix srcs/, main.c \
-				$(addprefix bits/, left_rotate.c reverse_endianness.c) \
+				$(addprefix bits/, buffer_bswap_32.c left_rotate.c) \
 				$(addprefix md5/, \
 					$(addprefix hash/, algorithm.c) \
 					$(addprefix message/, allocation.c)) \

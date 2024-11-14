@@ -75,6 +75,6 @@ md5_hash_t md5_hash(md5_message_t message) {
     base_hash.c += hash.c;
     base_hash.d += hash.d;
   }
-  reverse_endianness((void *)(&base_hash), sizeof(base_hash));
+  buffer_bswap_32((void *)(&base_hash), sizeof(base_hash));
   return base_hash;
 }
