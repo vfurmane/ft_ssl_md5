@@ -5,7 +5,7 @@ SRCS		= $(addprefix srcs/, main.c \
 					$(addprefix hash/, algorithm.c) \
 					$(addprefix message/, allocation.c)) \
 				$(addprefix print/, binary.c write.c) \
-				$(addprefix utils/, ft_bzero.c ft_memcpy.c ft_strlen.c))
+				$(addprefix utils/, ft_bswap.c ft_bzero.c ft_memcpy.c ft_strlen.c))
 INC_DIRS	= $(addprefix -I, includes/)
 OBJS		= $(SRCS:.c=.o)
 
