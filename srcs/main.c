@@ -1,9 +1,5 @@
 #include "md5/hash.h"
-#include "unistd.h"
-
-size_t write_stdout(const void *buf, size_t n) {
-  return write(STDOUT_FILENO, buf, n);
-}
+#include "print.h"
 
 void print_32hex(unsigned int nbr) {
   const unsigned int buffer_size = 8;
