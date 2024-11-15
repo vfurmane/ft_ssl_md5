@@ -15,7 +15,7 @@ DEBUG_FLAGS	:=
 RM			= rm -f
 
 %.o:		%.c
-	$(CC) $(CFLAGS) $(DEBUG_FLAGS) -g3 -c $< $(INC_DIRS) -o $@
+	$(CC) $(CFLAGS) $(DEBUG_FLAGS) -c $< $(INC_DIRS) -o $@
 
 all:		$(NAME)
 
