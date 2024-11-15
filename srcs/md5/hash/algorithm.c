@@ -91,8 +91,9 @@ md5_hash_t md5_hash(md5_message_t message) {
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 1
   PRINT(
-      "hash done: %#010x %#010x %#010x %#010x (endianness might be wrong here)\n", base_hash.a, base_hash.b,
-      base_hash.c, base_hash.d
+      "hash done: %#010x %#010x %#010x %#010x (endianness might be wrong "
+      "here)\n",
+      base_hash.a, base_hash.b, base_hash.c, base_hash.d
   );
 
   return base_hash;
