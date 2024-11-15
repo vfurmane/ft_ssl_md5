@@ -1,6 +1,7 @@
 #ifndef MD5_MESSAGE_H
 #define MD5_MESSAGE_H
 
+#include "debug.h"
 #include "stdlib.h"
 #include "utils.h"
 

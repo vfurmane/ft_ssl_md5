@@ -20,17 +20,32 @@ void copy_original_message_into_buffer(
 void append_padding_bits_to_buffer(
     unsigned char *b, size_t origin_message_len, size_t buffer_len
 ) {
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 1
+
   if (b == NULL) {
     return;
   }
 
   ft_bzero(b + origin_message_len, buffer_len - origin_message_len);
   b[origin_message_len] = 1 << 7;
+
+  PRINT("adding padding bits--v%s\n", "");
+#ifdef DEBUG
+  for (unsigned int i = 0; i < buffer_len - origin_message_len; ++i) {
+    print_8bin(((char *)(b + origin_message_len))[i]);
+    write_stdout(" ", 1);
+  }
+  write_stdout("\n", 1);
+#endif
 }
 
 void append_length_to_buffer(
     unsigned char *b, size_t buffer_len, size_t msg_bits_len
 ) {
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 1
+
   if (b == NULL) {
     return;
   }
@@ -41,7 +56,15 @@ void append_length_to_buffer(
   for (size_t i = 0; i < length_padding_size; ++i) {
     b[buffer_len - (length_padding_size - i)] = ((char *)(&msg_bits_len))[i];
   }
+
+  PRINT("adding length bits--v%s\n", "");
+#ifdef DEBUG
+  for (unsigned int i = 0; i < LENGTH_PADDING_BITS_NBR / bits_per_byte; ++i) {
+    print_8bin(b[buffer_len - (bits_per_byte - i)]);
+    write_stdout(" ", 1);
   }
+  write_stdout("\n", 1);
+#endif
 }
 
 /**
@@ -68,8 +91,13 @@ void append_length_to_buffer(
  * structure to ensure it is not NULL before proceeding.
  */
 md5_padded_buffer_t allocate_buffer_from_string_with_padding(const char *str) {
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 1
+
   const size_t origin_message_len = ft_strlen(str);
+  PRINT("str length=%zu\n", origin_message_len);
   const size_t origin_message_bits_len = origin_message_len * 8;
+  PRINT("str length (in bits)=%zu\n", origin_message_bits_len);
   const size_t buffer_len = get_required_bytes_nbr(origin_message_bits_len);
 
   unsigned char *b = malloc(buffer_len);
@@ -110,6 +138,13 @@ md5_padded_buffer_t allocate_buffer_from_string_with_padding(const char *str) {
  * the returned structure to ensure it is not NULL before proceeding.
  */
 md5_message_t allocate_message_from_string(const char *str) {
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 0
+  PRINT("Allocating the buffer%s\n", "");
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 1
+  PRINT("str='%s'\n", str);
+
   const md5_padded_buffer_t buffer =
       allocate_buffer_from_string_with_padding(str);
   if (buffer.b == NULL) {
@@ -120,6 +155,22 @@ md5_message_t allocate_message_from_string(const char *str) {
   const md5_message_t message = {
       .chunks = buffer.len / BUFFER_BITS_NBR, .b = buffer.b
   };
+
+  PRINT("message done%s\n", "");
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 2
+  PRINT("buffer len=%zu\n", buffer.len);
+  PRINT("chunks nbr=%d\n", message.chunks);
+  PRINT("buffer --v%s\n", "");
+
+#ifdef DEBUG
+  const size_t bits_per_byte = CHAR_BIT;
+  for (unsigned int i = 0; i < (buffer.len) / (bits_per_byte * 1); ++i) {
+    print_8bin(((char *)(message.b))[i]);
+    write_stdout(" ", 1);
+  }
+  write_stdout("\n", 1);
+#endif
 
   return message;
 }
