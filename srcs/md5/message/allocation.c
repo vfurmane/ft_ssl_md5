@@ -36,9 +36,11 @@ void append_length_to_buffer(
   }
 
   const size_t bits_per_byte = CHAR_BIT;
+  const size_t length_padding_size = LENGTH_PADDING_BITS_NBR / bits_per_byte;
 
-  for (size_t i = 0; i < bits_per_byte; ++i) {
-    b[buffer_len - bits_per_byte - i] = ((char *)(&msg_bits_len))[i];
+  for (size_t i = 0; i < length_padding_size; ++i) {
+    b[buffer_len - (length_padding_size - i)] = ((char *)(&msg_bits_len))[i];
+  }
   }
 }
 
