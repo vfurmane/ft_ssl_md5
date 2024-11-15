@@ -4,6 +4,11 @@
 #include "stdlib.h"
 #include "utils.h"
 
+#include <limits.h>
+
+#define LENGTH_PADDING_BITS_NBR 64
+#define BUFFER_BITS_NBR 512
+
 typedef struct md5_padded_buffer_s {
   size_t len;
   void *b;
