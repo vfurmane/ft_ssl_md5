@@ -60,10 +60,22 @@ md5_hash_t md5_hash_round(
 }
 
 md5_hash_t md5_hash(md5_message_t message) {
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 0
+  PRINT("Hashing the buffer%s\n", "");
   md5_hash_t base_hash = {
       .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
   };
   for (size_t i = 0; i < message.chunks; ++i) {
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 1
+    PRINT("ROUND %zu\n", i + 1);
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 2
+    PRINT(
+        "current hash: %#010x %#010x %#010x %#010x\n", base_hash.a, base_hash.b,
+        base_hash.c, base_hash.d
+    );
     md5_message_chunk_t message_chunk = message.b + i * 16;
 
     md5_hash_t hash = base_hash;
@@ -75,5 +87,13 @@ md5_hash_t md5_hash(md5_message_t message) {
     base_hash.c += hash.c;
     base_hash.d += hash.d;
   }
+
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 1
+  PRINT(
+      "hash done: %#010x %#010x %#010x %#010x (endianness might be wrong here)\n", base_hash.a, base_hash.b,
+      base_hash.c, base_hash.d
+  );
+
   return base_hash;
 }
