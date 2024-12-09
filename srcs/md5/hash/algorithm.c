@@ -39,7 +39,7 @@ md5_message_chunk_word_t md5_hash_round4(
   return md5_hash_round_f(hash, message_chunk[g], k_table[i], f);
 }
 
-md5_hash_t md5_hash_round(
+md5_hash_t md5_hash_chunk_round(
     md5_hash_t hash, md5_message_chunk_t message_chunk, unsigned int i
 ) {
   const md5_message_chunk_word_t f =
@@ -57,6 +57,21 @@ md5_hash_t md5_hash_round(
       .b = new_b,
   };
   return ret;
+}
+
+md5_hash_t
+md5_hash_chunk(md5_hash_t base_hash, md5_message_chunk_t message_chunk) {
+  md5_hash_t hash = base_hash;
+
+  for (size_t j = 0; j < 64; ++j) {
+    hash = md5_hash_chunk_round(hash, message_chunk, j);
+  }
+
+  base_hash.a += hash.a;
+  base_hash.b += hash.b;
+  base_hash.c += hash.c;
+  base_hash.d += hash.d;
+  return base_hash;
 }
 
 md5_hash_t md5_hash(md5_message_t message) {
@@ -77,15 +92,7 @@ md5_hash_t md5_hash(md5_message_t message) {
         base_hash.c, base_hash.d
     );
     md5_message_chunk_t message_chunk = message.b + i * 16;
-
-    md5_hash_t hash = base_hash;
-    for (size_t j = 0; j < 64; ++j) {
-      hash = md5_hash_round(hash, message_chunk, j);
-    }
-    base_hash.a += hash.a;
-    base_hash.b += hash.b;
-    base_hash.c += hash.c;
-    base_hash.d += hash.d;
+    base_hash = md5_hash_chunk(base_hash, message_chunk);
   }
 
 #undef CURRENT_INDENT
