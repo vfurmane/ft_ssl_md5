@@ -24,7 +24,7 @@ typedef struct md5_message_t {
 } md5_message_t;
 
 md5_padded_buffer_t reverse_buffer_endianness(md5_padded_buffer_t buffer);
-unsigned char *pad_chunk(unsigned char *buffer, size_t len);
+unsigned char *pad_buffer(unsigned char *buffer, size_t len);
 md5_message_t allocate_message_from_string(const char *str);
 void destroy_message(md5_message_t *message);
 

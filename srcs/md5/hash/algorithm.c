@@ -123,7 +123,7 @@ md5_hash_t md5_hash_static_string(const char *str) {
   const size_t len = ft_strlen(str);
   for (size_t i = 0; i < len; i += chunk_size) {
     ft_memcpy(buffer, str + i, ft_min_size(chunk_size, len - i));
-    pad_chunk(buffer, len);
+    pad_buffer(buffer, len);
     base_hash = md5_hash_chunk(base_hash, (md5_message_chunk_t)buffer);
   }
 
