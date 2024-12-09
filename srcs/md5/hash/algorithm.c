@@ -74,13 +74,10 @@ md5_hash_chunk(md5_hash_t base_hash, md5_message_chunk_t message_chunk) {
   return base_hash;
 }
 
-md5_hash_t md5_hash(md5_message_t message) {
+md5_hash_t md5_hash(md5_message_t message, md5_hash_t base_hash) {
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 0
   PRINT("Hashing the buffer%s\n", "");
-  md5_hash_t base_hash = {
-      .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
-  };
   for (size_t i = 0; i < message.chunks; ++i) {
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 1

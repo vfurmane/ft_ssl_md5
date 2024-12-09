@@ -33,7 +33,7 @@ static const unsigned int per_round_shifts[] = {
     6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21
 };
 
-md5_hash_t md5_hash(md5_message_t message);
+md5_hash_t md5_hash(md5_message_t message, md5_hash_t base_hash);
 
 void print_md5_hash(md5_hash_t hash);
 

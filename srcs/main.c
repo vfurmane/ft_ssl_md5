@@ -9,7 +9,10 @@ int main(void) {
     return 1;
   }
 
-  const md5_hash_t hash = md5_hash(message);
+  md5_hash_t base_hash = {
+      .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
+  };
+  const md5_hash_t hash = md5_hash(message, base_hash);
 
   print_md5_hash(hash);
 
