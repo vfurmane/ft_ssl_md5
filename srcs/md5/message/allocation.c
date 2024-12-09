@@ -18,7 +18,8 @@ void copy_original_message_into_buffer(
 }
 
 void append_padding_bits_to_buffer(
-    unsigned char *b, size_t origin_message_len, size_t buffer_len
+    unsigned char *b, size_t origin_message_len, size_t buffer_len,
+    uint8_t should_add_first_byte
 ) {
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 1
@@ -28,7 +29,9 @@ void append_padding_bits_to_buffer(
   }
 
   ft_bzero(b + origin_message_len, buffer_len - origin_message_len);
-  b[origin_message_len] = 1 << 7;
+  if (should_add_first_byte) {
+    b[origin_message_len] = 1 << 7;
+  }
 
   PRINT("adding padding bits--v%s\n", "");
 #ifdef DEBUG
@@ -75,8 +78,31 @@ unsigned char *pad_buffer(unsigned char *buffer, size_t len) {
   PRINT("buffer length (in bits)=%zu\n", origin_message_bits_len);
   const size_t buffer_len = get_required_bytes_nbr(origin_message_bits_len);
 
-  append_padding_bits_to_buffer(buffer, len, buffer_len);
+  append_padding_bits_to_buffer(buffer, len, buffer_len, 1);
   append_length_to_buffer(buffer, buffer_len, origin_message_bits_len);
+
+  return buffer;
+}
+
+unsigned char *pad_chunk(unsigned char *buffer, size_t i, size_t len) {
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 1
+
+  const size_t chunk_size = BUFFER_BITS_NBR / CHAR_BIT;
+  if (i + chunk_size < len) {
+    return buffer;
+  }
+
+  const size_t origin_message_bits_len = len * 8;
+  PRINT("buffer length (in bits)=%zu\n", origin_message_bits_len);
+
+  append_padding_bits_to_buffer(
+      buffer, ft_max_size(len - i, 0), chunk_size, i < len
+  );
+  if (i > len ||
+      chunk_size - len - i >= (LENGTH_PADDING_BITS_NBR / CHAR_BIT) + 1) {
+    append_length_to_buffer(buffer, chunk_size, origin_message_bits_len);
+  }
 
   return buffer;
 }

@@ -103,16 +103,11 @@ md5_hash_t md5_hash(md5_message_t message, md5_hash_t base_hash) {
   return base_hash;
 }
 
-// TODO move out
-size_t ft_min_size(size_t a, size_t b) {
-  if (a < b) {
-    return a;
-  } else {
-    return b;
-  }
-}
-
 md5_hash_t md5_hash_static_string(const char *str) {
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 0
+  PRINT("Hashing the static buffer%s\n", "");
+
   const size_t chunk_size = BUFFER_BITS_NBR / CHAR_BIT;
   unsigned char buffer[chunk_size];
 
@@ -121,9 +116,14 @@ md5_hash_t md5_hash_static_string(const char *str) {
   };
 
   const size_t len = ft_strlen(str);
-  for (size_t i = 0; i < len; i += chunk_size) {
-    ft_memcpy(buffer, str + i, ft_min_size(chunk_size, len - i));
-    pad_buffer(buffer, len);
+  const size_t total_message_len = get_required_bytes_nbr(len * CHAR_BIT);
+  for (size_t i = 0; i < total_message_len; i += chunk_size) {
+    const char *str_start = str + i;
+    const size_t size = ft_max_size(ft_min_size(chunk_size, len - i), 0);
+    ft_memcpy(buffer, str_start, size);
+
+    pad_chunk(buffer, i, len);
+
     base_hash = md5_hash_chunk(base_hash, (md5_message_chunk_t)buffer);
   }
 
