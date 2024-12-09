@@ -102,3 +102,30 @@ md5_hash_t md5_hash(md5_message_t message, md5_hash_t base_hash) {
 
   return base_hash;
 }
+
+// TODO move out
+size_t ft_min_size(size_t a, size_t b) {
+  if (a < b) {
+    return a;
+  } else {
+    return b;
+  }
+}
+
+md5_hash_t md5_hash_static_string(const char *str) {
+  const size_t chunk_size = BUFFER_BITS_NBR / CHAR_BIT;
+  unsigned char buffer[chunk_size];
+
+  md5_hash_t base_hash = {
+      .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
+  };
+
+  const size_t len = ft_strlen(str);
+  for (size_t i = 0; i < len; i += chunk_size) {
+    ft_memcpy(buffer, str + i, ft_min_size(chunk_size, len - i));
+    pad_chunk(buffer, len);
+    base_hash = md5_hash_chunk(base_hash, (md5_message_chunk_t)buffer);
+  }
+
+  return base_hash;
+}
