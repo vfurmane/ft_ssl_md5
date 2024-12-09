@@ -116,16 +116,45 @@ md5_hash_t md5_hash_static_string(const char *str) {
   };
 
   const size_t len = ft_strlen(str);
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 1
+  PRINT("original message length: %zu\n", len);
   const size_t total_message_len = get_required_bytes_nbr(len * CHAR_BIT);
+  PRINT("final message length: %zu\n", total_message_len);
   for (size_t i = 0; i < total_message_len; i += chunk_size) {
+    PRINT("ROUND %zu\n", (i / chunk_size) + 1);
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 2
+    PRINT(
+        "current hash: %#010x %#010x %#010x %#010x\n", base_hash.a, base_hash.b,
+        base_hash.c, base_hash.d
+    );
     const char *str_start = str + i;
     const size_t size = ft_max_size(ft_min_size(chunk_size, len - i), 0);
     ft_memcpy(buffer, str_start, size);
 
     pad_chunk(buffer, i, len);
 
+    PRINT("static buffer --v%s\n", "");
+
+#ifdef DEBUG
+    for (unsigned int j = 0; j < chunk_size; ++j) {
+      print_8bin(((char *)buffer)[j]);
+      write_stdout(" ", 1);
+    }
+    write_stdout("\n", 1);
+#endif
+
     base_hash = md5_hash_chunk(base_hash, (md5_message_chunk_t)buffer);
   }
+
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 1
+  PRINT(
+      "hash done: %#010x %#010x %#010x %#010x (endianness might be wrong "
+      "here)\n",
+      base_hash.a, base_hash.b, base_hash.c, base_hash.d
+  );
 
   return base_hash;
 }
