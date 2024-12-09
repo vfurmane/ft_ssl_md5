@@ -67,6 +67,20 @@ void append_length_to_buffer(
 #endif
 }
 
+unsigned char *pad_chunk(unsigned char *buffer, size_t len) {
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 1
+
+  const size_t origin_message_bits_len = len * 8;
+  PRINT("buffer length (in bits)=%zu\n", origin_message_bits_len);
+  const size_t buffer_len = get_required_bytes_nbr(origin_message_bits_len);
+
+  append_padding_bits_to_buffer(buffer, len, buffer_len);
+  append_length_to_buffer(buffer, buffer_len, origin_message_bits_len);
+
+  return buffer;
+}
+
 /**
  * @brief Allocates a buffer with padding for an MD5 hash computation from a
  * given string.
@@ -109,8 +123,7 @@ md5_padded_buffer_t allocate_buffer_from_string_with_padding(const char *str) {
   const size_t bits_per_byte = CHAR_BIT;
 
   copy_original_message_into_buffer(b, str, origin_message_len);
-  append_padding_bits_to_buffer(b, origin_message_len, buffer_len);
-  append_length_to_buffer(b, buffer_len, origin_message_bits_len);
+  pad_chunk(b, origin_message_len);
 
   md5_padded_buffer_t buffer = {.len = buffer_len * bits_per_byte, .b = b};
 
