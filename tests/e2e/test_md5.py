@@ -10,7 +10,9 @@ test_inputs = ["", "1", "hello, world!", "As the wind caresses the grass, I fell
                "The bird flew high, soaring through the bright blue sky.",
                "The cat sat quietly by the window, watching the birds fly.",
                "The pie was sour, lightly crisp on the side, and this is how she liked her pies since then.",
-               "He stood still for a moment, hoping that the night would last forever. That's how those condemned to death must hope."]
+               "He stood still for a moment, hoping that the night would last forever. That's how those condemned to death must hope.",
+               "A quiet breeze swept through the trees as stars sparkled above, casting a serene glow over the calm and peaceful night.",
+               "The golden sun dipped below the horizon, painting the evening sky with hues of pink, orange, and purple in soft strokes."]
 
 
 class TestMd5:
