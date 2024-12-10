@@ -19,3 +19,7 @@ void print_formatted_md5_hash(
 void print_md5_hashed_string(const char *str, md5_hash_t hash) {
   return print_formatted_md5_hash(str, hash, 1);
 }
+
+void print_md5_hashed_stdin(md5_hash_t hash) {
+  return print_formatted_md5_hash("stdin", hash, 0);
+}
