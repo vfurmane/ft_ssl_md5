@@ -5,7 +5,11 @@ from utils import make_tested_command
 
 
 class TestMd5:
-    @pytest.mark.parametrize("test_input", ["hello, world!"])
+    @pytest.mark.parametrize("test_input",
+                             ["", "1", "hello, world!", "As the wind caresses the grass, I fell asleep.",
+                              "The sun dipped low, painting the sky in shades of pink.",
+                              "The cat sat quietly by the window, watching the birds fly.",
+                              "The pie was sour, lightly crisp on the side, and this is how she liked her pies since then."])
     def test_algo(self, cli_path, test_input):
         result = subprocess.run(make_tested_command([cli_path, "-s", test_input], with_leak_check=True),
                                 capture_output=True, text=True)
