@@ -3,8 +3,13 @@
 #include "print.h"
 
 int main(int argc, char **argv) {
-  if (argc < 2) {
-    return 1;
+  if (argc == 1) {
+    const maybe_md5_hash_t ret = md5_hash_fd(STDIN_FILENO);
+    if (!ret.some) {
+      putstr_stderr("error while reading stdin");
+      return 1;
+    }
+    print_md5_hashed_stdin(ret.hash);
   }
 
   arg_parser_state_t arg_parser_state = INITIAL;

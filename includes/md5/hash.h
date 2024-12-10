@@ -4,12 +4,19 @@
 #include "bits.h"
 #include "md5/message.h"
 
+#include <unistd.h>
+
 typedef struct md5_hash_s {
   md5_message_chunk_word_t a;
   md5_message_chunk_word_t b;
   md5_message_chunk_word_t c;
   md5_message_chunk_word_t d;
 } md5_hash_t;
+
+typedef struct maybe_md5_hash_s {
+  uint8_t some;
+  md5_hash_t hash;
+} maybe_md5_hash_t;
 
 static const md5_message_chunk_word_t k_table[] = {
     0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee, 0xf57c0faf, 0x4787c62a,
@@ -34,6 +41,7 @@ static const unsigned int per_round_shifts[] = {
 
 md5_hash_t md5_hash(md5_message_t message, md5_hash_t base_hash);
 md5_hash_t md5_hash_static_string(const char *str);
+maybe_md5_hash_t md5_hash_fd(int fd);
 
 void print_md5_hash(md5_hash_t hash);
 

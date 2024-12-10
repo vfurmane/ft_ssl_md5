@@ -159,3 +159,23 @@ md5_hash_t md5_hash_static_string(const char *str) {
 
   return base_hash;
 }
+
+maybe_md5_hash_t md5_hash_fd(int fd) {
+  maybe_md5_hash_t result = {.some = 0};
+  const size_t chunk_size = BUFFER_BITS_NBR / CHAR_BIT;
+  char buffer[chunk_size + 1];
+
+  ssize_t ret = 0;
+  md5_hash_t hash;
+  while ((ret = read(fd, buffer, chunk_size)) > 0) {
+    buffer[ret] = '\0';
+    hash = md5_hash_static_string(buffer);
+  }
+  if (ret < 0) {
+    return result;
+  }
+
+  result.some = 1;
+  result.hash = hash;
+  return result;
+}
