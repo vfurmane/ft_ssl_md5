@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
 
   if (ft_strcmp(argv[1], "md5") == 0) {
     if (argc == 2) {
-      const maybe_md5_hash_t ret = md5_hash_fd(STDIN_FILENO);
+      const maybe_md5_hash_t ret = md5_hash_fd(STDIN_FILENO, 0);
       if (!ret.some) {
         putstr_stderr("error while reading stdin");
         return 1;
@@ -22,6 +22,14 @@ int main(int argc, char **argv) {
       if (arg_parser_state == INITIAL) {
         if (ft_strcmp(argv[i], "-s") == 0) {
           arg_parser_state = STRING;
+        } else if (ft_strcmp(argv[i], "-p") == 0) {
+          const maybe_md5_hash_t ret = md5_hash_fd(STDIN_FILENO, 1);
+          if (!ret.some) {
+            putstr_stderr("error while reading stdin");
+            return 1;
+          }
+          print_md5_hash(ret.hash);
+          putstr_stdout("\n");
         } else {
           return 1;
         }

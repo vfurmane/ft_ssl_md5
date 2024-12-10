@@ -1,5 +1,6 @@
 #include "debug.h"
 #include "md5/hash.h"
+#include "print.h"
 
 md5_message_chunk_word_t md5_hash_round_f(
     md5_hash_t hash, md5_message_chunk_word_t message_chunk_word,
@@ -160,7 +161,7 @@ md5_hash_t md5_hash_static_string(const char *str) {
   return base_hash;
 }
 
-maybe_md5_hash_t md5_hash_fd(int fd) {
+maybe_md5_hash_t md5_hash_fd(int fd, uint8_t should_print) {
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 0
   PRINT("Hashing the fd %d\n", fd);
@@ -176,6 +177,9 @@ maybe_md5_hash_t md5_hash_fd(int fd) {
       .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
   };
 
+  if (should_print) {
+    putstr_stdout("(\"");
+  }
   do {
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 1
@@ -186,15 +190,17 @@ maybe_md5_hash_t md5_hash_fd(int fd) {
         "current hash: %#010x %#010x %#010x %#010x\n", base_hash.a, base_hash.b,
         base_hash.c, base_hash.d
     );
-    ret = read(fd, buffer, chunk_size);
 
+    ret = read(fd, buffer, chunk_size);
     if (ret < 0) {
       PRINT("error on read, exiting%s\n", "");
       return result;
     }
-
     PRINT("reading %zd characters\n", ret);
 
+    if (should_print) {
+      write_stdout(buffer, ret);
+    }
     total_len += ret;
     pad_chunk(buffer, i, total_len);
 
@@ -212,7 +218,9 @@ maybe_md5_hash_t md5_hash_fd(int fd) {
 
     i += chunk_size;
   } while ((size_t)ret >= (chunk_size - (LENGTH_PADDING_BITS_NBR / CHAR_BIT)));
-
+  if (should_print) {
+    putstr_stdout("\")= ");
+  }
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 1
   PRINT(
