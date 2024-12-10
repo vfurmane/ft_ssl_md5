@@ -4,28 +4,34 @@
 
 int main(int argc, char **argv) {
   if (argc == 1) {
-    const maybe_md5_hash_t ret = md5_hash_fd(STDIN_FILENO);
-    if (!ret.some) {
-      putstr_stderr("error while reading stdin");
-      return 1;
-    }
-    print_md5_hashed_stdin(ret.hash);
+    return 1;
   }
 
-  arg_parser_state_t arg_parser_state = INITIAL;
-  for (int i = 1; i < argc; ++i) {
-    if (arg_parser_state == INITIAL) {
-      if (ft_strcmp(argv[i], "-s") == 0) {
-        arg_parser_state = STRING;
+  if (ft_strcmp(argv[1], "md5") == 0) {
+    if (argc == 2) {
+      const maybe_md5_hash_t ret = md5_hash_fd(STDIN_FILENO);
+      if (!ret.some) {
+        putstr_stderr("error while reading stdin");
+        return 1;
+      }
+      print_md5_hashed_stdin(ret.hash);
+    }
+
+    arg_parser_state_t arg_parser_state = INITIAL;
+    for (int i = 2; i < argc; ++i) {
+      if (arg_parser_state == INITIAL) {
+        if (ft_strcmp(argv[i], "-s") == 0) {
+          arg_parser_state = STRING;
+        } else {
+          return 1;
+        }
+      } else if (arg_parser_state == STRING) {
+        const md5_hash_t hash = md5_hash_static_string(argv[i]);
+        print_md5_hashed_string(argv[i], hash);
+        arg_parser_state = INITIAL;
       } else {
         return 1;
       }
-    } else if (arg_parser_state == STRING) {
-      const md5_hash_t hash = md5_hash_static_string(argv[i]);
-      print_md5_hashed_string(argv[i], hash);
-      arg_parser_state = INITIAL;
-    } else {
-      return 1;
     }
   }
 
