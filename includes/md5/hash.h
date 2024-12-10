@@ -3,7 +3,6 @@
 
 #include "bits.h"
 #include "md5/message.h"
-#include "print.h"
 
 typedef struct md5_hash_s {
   md5_message_chunk_word_t a;

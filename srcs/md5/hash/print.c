@@ -1,3 +1,5 @@
+#include "print.h"
+
 #include "md5/hash.h"
 
 void print_md5_hash(md5_hash_t hash) {
