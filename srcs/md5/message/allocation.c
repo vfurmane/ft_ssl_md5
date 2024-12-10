@@ -97,7 +97,7 @@ unsigned char *pad_chunk(unsigned char *buffer, size_t i, size_t len) {
   PRINT("buffer length (in bits)=%zu\n", origin_message_bits_len);
 
   append_padding_bits_to_buffer(
-      buffer, ft_max_size(len - i, 0), chunk_size, i < len
+      buffer, ft_max_size(len - i, 0), chunk_size, i <= len
   );
   if (i > len ||
       chunk_size - len - i >= (LENGTH_PADDING_BITS_NBR / CHAR_BIT) + 1) {
