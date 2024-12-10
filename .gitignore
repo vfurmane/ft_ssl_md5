@@ -7,3 +7,6 @@ ft_ssl
 # IDE and editors
 /.idea/
 /.vscode/
+
+# Pytest
+__pycache__/
