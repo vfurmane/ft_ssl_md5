@@ -18,6 +18,7 @@ int main(int argc, char **argv) {
     } else if (arg_parser_state == STRING) {
       const md5_hash_t hash = md5_hash_static_string(argv[i]);
       print_md5_hash(hash);
+      putstr_stdout("\n");
       arg_parser_state = INITIAL;
     } else {
       return 1;
