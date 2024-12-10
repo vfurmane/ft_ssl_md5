@@ -21,7 +21,6 @@ class TestMd5:
     def test_stdin(self, cli_path, test_input):
         result = subprocess.run(make_tested_command([cli_path, "md5"], with_leak_check=True),
                                 text=True, capture_output=True, input=test_input)
-        print(result.stdout)
         assert hashlib.md5(test_input.encode("utf-8")).hexdigest() in result.stdout, "hash not found in output"
 
     @pytest.mark.parametrize("test_input", test_inputs)
