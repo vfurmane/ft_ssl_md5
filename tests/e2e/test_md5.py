@@ -8,6 +8,9 @@ class TestMd5:
     @pytest.mark.parametrize("test_input",
                              ["", "1", "hello, world!", "As the wind caresses the grass, I fell asleep.",
                               "The sun dipped low, painting the sky in shades of pink.",
+                              "The dog ran across the field, chasing after a red ball.",
+                              "The moon rose high above the dark, quiet sleeping town.",
+                              "The bird flew high, soaring through the bright blue sky.",
                               "The cat sat quietly by the window, watching the birds fly.",
                               "The pie was sour, lightly crisp on the side, and this is how she liked her pies since then."])
     def test_algo(self, cli_path, test_input):
