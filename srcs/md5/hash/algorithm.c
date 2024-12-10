@@ -161,21 +161,67 @@ md5_hash_t md5_hash_static_string(const char *str) {
 }
 
 maybe_md5_hash_t md5_hash_fd(int fd) {
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 0
+  PRINT("Hashing the fd %d\n", fd);
+
   maybe_md5_hash_t result = {.some = 0};
   const size_t chunk_size = BUFFER_BITS_NBR / CHAR_BIT;
-  char buffer[chunk_size + 1];
+  unsigned char buffer[chunk_size];
 
+  size_t total_len = 0;
+  size_t i = 0;
   ssize_t ret = 0;
-  md5_hash_t hash;
-  while ((ret = read(fd, buffer, chunk_size)) > 0) {
-    buffer[ret] = '\0';
-    hash = md5_hash_static_string(buffer);
-  }
-  if (ret < 0) {
-    return result;
-  }
+  md5_hash_t base_hash = {
+      .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
+  };
+
+  do {
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 1
+    PRINT("ROUND %zu\n", (i / chunk_size) + 1);
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 2
+    PRINT(
+        "current hash: %#010x %#010x %#010x %#010x\n", base_hash.a, base_hash.b,
+        base_hash.c, base_hash.d
+    );
+    ret = read(fd, buffer, chunk_size);
+
+    if (ret < 0) {
+      PRINT("error on read, exiting%s\n", "");
+      return result;
+    }
+
+    PRINT("reading %zd characters\n", ret);
+
+    total_len += ret;
+    pad_chunk(buffer, i, total_len);
+
+    PRINT("static buffer --v%s\n", "");
+
+#ifdef DEBUG
+    for (unsigned int j = 0; j < chunk_size; ++j) {
+      print_8bin(((char *)buffer)[j]);
+      write_stdout(" ", 1);
+    }
+    write_stdout("\n", 1);
+#endif
+
+    base_hash = md5_hash_chunk(base_hash, (md5_message_chunk_t)buffer);
+
+    i += chunk_size;
+  } while ((size_t)ret >= (chunk_size - (LENGTH_PADDING_BITS_NBR / CHAR_BIT)));
+
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 1
+  PRINT(
+      "hash done: %#010x %#010x %#010x %#010x (endianness might be wrong "
+      "here)\n",
+      base_hash.a, base_hash.b, base_hash.c, base_hash.d
+  );
 
   result.some = 1;
-  result.hash = hash;
+  result.hash = base_hash;
   return result;
 }
