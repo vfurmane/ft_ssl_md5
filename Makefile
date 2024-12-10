@@ -21,7 +21,7 @@ PYTEST		= pytest
 all:		$(NAME)
 
 $(NAME):	$(OBJS)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $(DEBUG_FLAGS) $^ -o $@
 
 clean:
 	$(RM) $(OBJS)
