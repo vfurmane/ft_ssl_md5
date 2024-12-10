@@ -13,6 +13,7 @@ CC			= cc
 CFLAGS		= -Wall -Wextra -Werror
 DEBUG_FLAGS	:=
 RM			= rm -f
+PYTEST		= pytest
 
 %.o:		%.c
 	$(CC) $(CFLAGS) $(DEBUG_FLAGS) -c $< $(INC_DIRS) -o $@
@@ -30,4 +31,7 @@ fclean:		clean
 
 re:			fclean all
 
-.PHONY: all clean fclean re
+test:
+	$(PYTEST)
+
+.PHONY: all clean fclean re test
