@@ -14,5 +14,4 @@ void print_32hex(unsigned int nbr) {
   }
 
   write_stdout(buffer, buffer_size);
-  write_stdout(" ", 1);
 }
