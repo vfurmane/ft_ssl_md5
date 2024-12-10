@@ -1,3 +1,4 @@
+#include "debug.h"
 #include "md5/hash.h"
 
 md5_message_chunk_word_t md5_hash_round_f(

@@ -1,3 +1,4 @@
+#include "debug.h"
 #include "md5/message.h"
 
 size_t get_required_bytes_nbr(size_t bits_len) {
