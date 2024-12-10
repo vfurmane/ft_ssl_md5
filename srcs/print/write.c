@@ -12,3 +12,8 @@ size_t putstr_stdout(const char *str) {
 size_t write_stderr(const void *buf, size_t n) {
   return write(STDERR_FILENO, buf, n);
 }
+
+size_t putstr_stderr(const char *str) {
+  const size_t len = ft_strlen(str);
+  return write_stderr(str, len);
+}

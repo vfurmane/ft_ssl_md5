@@ -7,6 +7,7 @@
 size_t write_stdout(const void *buf, size_t n);
 size_t putstr_stdout(const char *str);
 size_t write_stderr(const void *buf, size_t n);
+size_t putstr_stderr(const char *str);
 
 void print_8bin(char nbr);
 
