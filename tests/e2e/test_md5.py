@@ -18,14 +18,14 @@ test_inputs = ["", "1", "hello, world!", "As the wind caresses the grass, I fell
 class TestMd5:
 
     @pytest.mark.parametrize("test_input", test_inputs)
-    def test_arguments_less_md5(self, cli_path, test_input):
+    def test_stdin(self, cli_path, test_input):
         result = subprocess.run(make_tested_command([cli_path, "md5"], with_leak_check=True),
                                 text=True, capture_output=True, input=test_input)
         print(result.stdout)
         assert hashlib.md5(test_input.encode("utf-8")).hexdigest() in result.stdout, "hash not found in output"
 
     @pytest.mark.parametrize("test_input", test_inputs)
-    def test_algo(self, cli_path, test_input):
+    def test_string_flag(self, cli_path, test_input):
         result = subprocess.run(make_tested_command([cli_path, "md5", "-s", test_input], with_leak_check=True),
                                 capture_output=True, text=True)
         assert hashlib.md5(test_input.encode("utf-8")).hexdigest() in result.stdout, "hash not found in output"
