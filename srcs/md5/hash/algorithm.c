@@ -161,7 +161,8 @@ md5_hash_t md5_hash_static_string(const char *str) {
   return base_hash;
 }
 
-maybe_md5_hash_t md5_hash_fd(int fd, uint8_t should_print) {
+maybe_md5_hash_t
+md5_hash_fd(int fd, md5_config_t config, uint8_t should_print) {
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 0
   PRINT("Hashing the fd %d\n", fd);
@@ -177,7 +178,7 @@ maybe_md5_hash_t md5_hash_fd(int fd, uint8_t should_print) {
       .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
   };
 
-  if (should_print) {
+  if (should_print && !config.quiet) {
     putstr_stdout("(\"");
   }
   do {
@@ -219,7 +220,11 @@ maybe_md5_hash_t md5_hash_fd(int fd, uint8_t should_print) {
     i += chunk_size;
   } while ((size_t)ret >= (chunk_size - (LENGTH_PADDING_BITS_NBR / CHAR_BIT)));
   if (should_print) {
-    putstr_stdout("\")= ");
+    if (config.quiet) {
+      putstr_stdout("\n");
+    } else {
+      putstr_stdout("\")= ");
+    }
   }
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 1

@@ -14,7 +14,9 @@ void print_8bin(char nbr);
 
 void print_32hex(unsigned int nbr);
 
-void print_md5_hashed_string(const char *str, md5_hash_t hash);
-void print_md5_hashed_stdin(md5_hash_t hash);
+void print_md5_hashed_string(
+    const char *str, md5_hash_t hash, md5_config_t config
+);
+void print_md5_hashed_stdin(md5_hash_t hash, md5_config_t config);
 
 #endif

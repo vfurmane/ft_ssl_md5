@@ -1,6 +1,7 @@
 #ifndef MD5_HASH_H
 #define MD5_HASH_H
 
+#include "args.h"
 #include "bits.h"
 #include "md5/message.h"
 
@@ -41,7 +42,7 @@ static const unsigned int per_round_shifts[] = {
 
 md5_hash_t md5_hash(md5_message_t message, md5_hash_t base_hash);
 md5_hash_t md5_hash_static_string(const char *str);
-maybe_md5_hash_t md5_hash_fd(int fd, uint8_t should_print);
+maybe_md5_hash_t md5_hash_fd(int fd, md5_config_t config, uint8_t should_print);
 
 void print_md5_hash(md5_hash_t hash);
 
