@@ -9,6 +9,7 @@ typedef enum arg_parser_state_e {
   STDIN,
   INITIAL,
   STRING,
+  FILE,
 } arg_parser_state_t;
 
 typedef struct md5_config_s {

@@ -2,6 +2,12 @@
 #include "md5/hash.h"
 #include "print.h"
 
+#include <errno.h>
+#include <fcntl.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
 int main(int argc, const char **argv) {
   if (argc == 1) {
     return 1;
@@ -26,14 +32,33 @@ int main(int argc, const char **argv) {
           arg_parser_state = INITIAL;
         } else if (ft_strcmp(argv[i], "-q") != 0 &&
                    ft_strcmp(argv[i], "-r") != 0) {
-          return 1;
+          arg_parser_state = FILE;
         }
       } else if (arg_parser_state == STRING) {
         const md5_hash_t hash = md5_hash_static_string(argv[i]);
         print_md5_hashed_string(argv[i], hash, config);
         arg_parser_state = INITIAL;
-      } else {
-        return 1;
+      }
+      if (arg_parser_state == FILE) {
+        const int fd = open(argv[i], O_RDONLY);
+        if (fd < 0) {
+          putstr_stderr(argv[0]);
+          putstr_stderr(": ");
+          putstr_stderr(argv[1]);
+          putstr_stderr(": ");
+          putstr_stderr(argv[i]);
+          putstr_stderr(": ");
+          putstr_stderr(strerror(errno));
+          putstr_stderr("\n");
+          continue;
+        }
+        const maybe_md5_hash_t ret = md5_hash_fd(fd, config, 0);
+        close(fd);
+        if (!ret.some) {
+          putstr_stderr("error while reading stdin");
+          return 1;
+        }
+        print_md5_hashed_file(ret.hash, argv[i], config);
       }
     }
 

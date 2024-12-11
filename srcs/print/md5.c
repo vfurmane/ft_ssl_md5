@@ -52,3 +52,9 @@ void print_md5_hashed_string(
 void print_md5_hashed_stdin(md5_hash_t hash, md5_config_t config) {
   return print_formatted_md5_hash("stdin", hash, config, 0, 0);
 }
+
+void print_md5_hashed_file(
+    md5_hash_t hash, const char *file, md5_config_t config
+) {
+  return print_formatted_md5_hash(file, hash, config, 0, 1);
+}
