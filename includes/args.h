@@ -3,6 +3,7 @@
 
 #include "stdint.h"
 #include "stdlib.h"
+#include <sys/types.h>
 #include "utils.h"
 
 typedef enum arg_parser_state_e {
