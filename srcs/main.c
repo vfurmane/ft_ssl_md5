@@ -14,11 +14,11 @@ int main(int argc, const char **argv) {
   if (ft_strcmp(argv[1], "md5") == 0) {
     const md5_config_t config = parse_md5_args(argc, argv);
 
-    arg_parser_state_t arg_parser_state = STDIN;
+    arg_parser_state_t arg_parser_state = STATE_STDIN;
     for (int i = 2; i < argc; ++i) {
-      if (arg_parser_state == STDIN || arg_parser_state == INITIAL) {
+      if (arg_parser_state == STATE_STDIN || arg_parser_state == STATE_INITIAL) {
         if (ft_strcmp(argv[i], "-s") == 0) {
-          arg_parser_state = STRING;
+          arg_parser_state = STATE_STRING;
         } else if (ft_strcmp(argv[i], "-p") == 0) {
           const maybe_md5_hash_t ret = md5_hash_fd(STDIN_FILENO, config, 1);
           if (!ret.some) {
@@ -27,17 +27,17 @@ int main(int argc, const char **argv) {
           }
           print_md5_hash(ret.hash);
           putstr_stdout("\n");
-          arg_parser_state = INITIAL;
+          arg_parser_state = STATE_INITIAL;
         } else if (ft_strcmp(argv[i], "-q") != 0 &&
                    ft_strcmp(argv[i], "-r") != 0) {
-          arg_parser_state = FILE;
+          arg_parser_state = STATE_FILE;
         }
-      } else if (arg_parser_state == STRING) {
+      } else if (arg_parser_state == STATE_STRING) {
         const md5_hash_t hash = md5_hash_static_string(argv[i]);
         print_md5_hashed_string(argv[i], hash, config);
-        arg_parser_state = INITIAL;
+        arg_parser_state = STATE_INITIAL;
       }
-      if (arg_parser_state == FILE) {
+      if (arg_parser_state == STATE_FILE) {
         const int fd = open(argv[i], O_RDONLY);
         if (fd < 0) {
           putstr_stderr(argv[0]);
@@ -60,7 +60,7 @@ int main(int argc, const char **argv) {
       }
     }
 
-    if (arg_parser_state == STDIN) {
+    if (arg_parser_state == STATE_STDIN) {
       const maybe_md5_hash_t ret = md5_hash_fd(STDIN_FILENO, config, 0);
       if (!ret.some) {
         putstr_stderr("error while reading stdin");

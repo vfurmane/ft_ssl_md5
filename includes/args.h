@@ -6,10 +6,10 @@
 #include "utils.h"
 
 typedef enum arg_parser_state_e {
-  STDIN,
-  INITIAL,
-  STRING,
-  FILE,
+  STATE_STDIN,
+  STATE_INITIAL,
+  STATE_STRING,
+  STATE_FILE,
 } arg_parser_state_t;
 
 typedef struct md5_config_s {
