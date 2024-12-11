@@ -29,7 +29,7 @@ void print_formatted_md5_hash(
     putstr_stdout("\n");
   } else {
     print_md5_hash(hash);
-    if (with_md5_prefix) {
+    if (!config.quiet && with_md5_prefix) {
       putstr_stdout(" ");
       if (with_quotes) {
         putstr_stdout("\"");
