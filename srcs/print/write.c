@@ -14,7 +14,10 @@ size_t write_stdout_skip_newlines(const void *buf, size_t n) {
   const char *start = buf;
   do {
     const char *end = ft_strchr(start, '\n');
-    len += write_stdout(start, end - ((const char *)buf));
+    len += write_stdout(
+        start, end == NULL ? n - (start - (const char *)buf)
+                           : end - ((const char *)buf)
+    );
     start = buf + len + 1;
   } while (start - ((const char *)buf) < (ssize_t)n);
 
