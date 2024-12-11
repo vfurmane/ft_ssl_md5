@@ -20,19 +20,19 @@ class TestMd5:
         test_input = "42 is nice\n"
         result = subprocess.run(make_tested_command([cli_path, "md5"], with_leak_check=True),
                                 text=True, capture_output=True, input=test_input)
-        assert hashlib.md5(test_input.encode("utf-8")).hexdigest() in result.stdout, "hash not found in output"
+        assert result.stdout == '(stdin)= 35f1d6de0302e2086a4e472266efb3a9\n', "output is different from the subject"
 
     def test_subject_pipe_ft_is_nice(self, cli_path):
         test_input = "42 is nice\n"
         result = subprocess.run(make_tested_command([cli_path, "md5", "-p"], with_leak_check=True),
                                 text=True, capture_output=True, input=test_input)
-        assert hashlib.md5(test_input.encode("utf-8")).hexdigest() in result.stdout, "hash not found in output"
+        assert result.stdout == '("42 is nice")= 35f1d6de0302e2086a4e472266efb3a9\n', "output is different from the subject"
 
     def test_subject_string_pity_those(self, cli_path):
         test_input = "pity those that aren't following baerista on spotify."
         result = subprocess.run(make_tested_command([cli_path, "md5", "-s", test_input], with_leak_check=True),
                                 capture_output=True, text=True)
-        assert hashlib.md5(test_input.encode("utf-8")).hexdigest() in result.stdout, "hash not found in output"
+        assert result.stdout == 'MD5 ("pity those that aren\'t following baerista on spotify.") = a3c990a1964705d9bf0e602f44572f5f\n', "output is different from the subject"
 
     @pytest.mark.parametrize("test_input", test_inputs)
     def test_stdin(self, cli_path, test_input):
