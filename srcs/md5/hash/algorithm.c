@@ -76,35 +76,6 @@ md5_hash_chunk(md5_hash_t base_hash, md5_message_chunk_t message_chunk) {
   return base_hash;
 }
 
-md5_hash_t md5_hash(md5_message_t message, md5_hash_t base_hash) {
-#undef CURRENT_INDENT
-#define CURRENT_INDENT 0
-  PRINT("Hashing the buffer%s\n", "");
-  for (size_t i = 0; i < message.chunks; ++i) {
-#undef CURRENT_INDENT
-#define CURRENT_INDENT 1
-    PRINT("ROUND %zu\n", i + 1);
-#undef CURRENT_INDENT
-#define CURRENT_INDENT 2
-    PRINT(
-        "current hash: %#010x %#010x %#010x %#010x\n", base_hash.a, base_hash.b,
-        base_hash.c, base_hash.d
-    );
-    md5_message_chunk_t message_chunk = message.b + i * 16;
-    base_hash = md5_hash_chunk(base_hash, message_chunk);
-  }
-
-#undef CURRENT_INDENT
-#define CURRENT_INDENT 1
-  PRINT(
-      "hash done: %#010x %#010x %#010x %#010x (endianness might be wrong "
-      "here)\n",
-      base_hash.a, base_hash.b, base_hash.c, base_hash.d
-  );
-
-  return base_hash;
-}
-
 md5_hash_t md5_hash_static_string(const char *str) {
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 0

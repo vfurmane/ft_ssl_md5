@@ -40,7 +40,6 @@ static const unsigned int per_round_shifts[] = {
     6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21
 };
 
-md5_hash_t md5_hash(md5_message_t message, md5_hash_t base_hash);
 md5_hash_t md5_hash_static_string(const char *str);
 maybe_md5_hash_t md5_hash_fd(int fd, md5_config_t config, uint8_t should_print);
 
