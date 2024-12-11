@@ -5,8 +5,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 int main(int argc, const char **argv) {
   if (argc == 1) {
