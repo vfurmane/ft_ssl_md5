@@ -13,6 +13,7 @@ typedef enum arg_parser_state_e {
 
 typedef struct md5_config_s {
   uint8_t quiet;
+  uint8_t reverse;
 } md5_config_t;
 
 md5_config_t init_md5_config(void);

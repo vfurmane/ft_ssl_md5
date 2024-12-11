@@ -24,7 +24,8 @@ int main(int argc, const char **argv) {
           print_md5_hash(ret.hash);
           putstr_stdout("\n");
           arg_parser_state = INITIAL;
-        } else if (ft_strcmp(argv[i], "-q") != 0) {
+        } else if (ft_strcmp(argv[i], "-q") != 0 &&
+                   ft_strcmp(argv[i], "-r") != 0) {
           return 1;
         }
       } else if (arg_parser_state == STRING) {

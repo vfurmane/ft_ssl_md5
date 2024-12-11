@@ -31,6 +31,13 @@ class TestMd5:
         assert result.returncode == 0, "return code should be 0 (ok)"
         assert result.stdout == '("42 is nice")= 35f1d6de0302e2086a4e472266efb3a9\n', "output is different from the subject"
 
+    def test_subject_pity_the_living(self, cli_path):
+        test_input = "Pity the living.\n"
+        result = subprocess.run(make_tested_command([cli_path, "md5", "-q", "-r"], with_leak_check),
+                                text=True, capture_output=True, input=test_input)
+        assert result.returncode == 0, "return code should be 0 (ok)"
+        assert result.stdout == 'e20c3b973f63482a778f3fd1869b7f25\n', "output is different from the subject"
+
     def test_subject_string_pity_those(self, cli_path):
         test_input = "pity those that aren't following baerista on spotify."
         result = subprocess.run(make_tested_command([cli_path, "md5", "-s", test_input], with_leak_check),
@@ -83,6 +90,27 @@ class TestMd5:
                                 text=True, capture_output=True)
         assert result.returncode == 0, "return code should be 0 (ok)"
         assert result.stdout == '3adbbad1791fbae3ec908894c4963870\n', "output does not meet expectations"
+
+    def test_reverse_string(self, cli_path):
+        test_input = "hello, world!"
+        result = subprocess.run(make_tested_command([cli_path, "md5", "-r", "-s", test_input], with_leak_check),
+                                text=True, capture_output=True)
+        assert result.returncode == 0, "return code should be 0 (ok)"
+        assert result.stdout == '3adbbad1791fbae3ec908894c4963870 "hello, world!"\n', "output does not meet expectations"
+
+    def test_string_reverse(self, cli_path):
+        test_input = "hello, world!"
+        result = subprocess.run(make_tested_command([cli_path, "md5", "-s", test_input, "-r"], with_leak_check),
+                                text=True, capture_output=True)
+        assert result.returncode == 0, "return code should be 0 (ok)"
+        assert result.stdout == '3adbbad1791fbae3ec908894c4963870 "hello, world!"\n', "output does not meet expectations"
+
+    def test_reverse_pipe(self, cli_path):
+        test_input = "42 is nice\n"
+        result = subprocess.run(make_tested_command([cli_path, "md5", "-r", "-p"], with_leak_check),
+                                text=True, capture_output=True, input=test_input)
+        assert result.returncode == 0, "return code should be 0 (ok)"
+        assert result.stdout == '("42 is nice")= 35f1d6de0302e2086a4e472266efb3a9\n', "output does not meet expectations"
 
     @pytest.mark.parametrize("test_input", test_inputs)
     def test_stdin(self, cli_path, test_input):
