@@ -29,6 +29,7 @@ int main(int argc, const char **argv) {
             }
             print_md5_hash(ret.hash);
             putstr_stdout("\n");
+            arg_parser_state = INITIAL;
           } else {
             return 1;
           }
