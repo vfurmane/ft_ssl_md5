@@ -1,10 +1,10 @@
 #ifndef MD5_MESSAGE_H
 #define MD5_MESSAGE_H
 
-#include "stdlib.h"
 #include "utils.h"
 
 #include <limits.h>
+#include <stdlib.h>
 
 #define LENGTH_PADDING_BITS_NBR 64
 #define BUFFER_BITS_NBR 512

@@ -1,10 +1,11 @@
 #ifndef ARGS_H
 #define ARGS_H
 
-#include "stdint.h"
-#include "stdlib.h"
-#include <sys/types.h>
 #include "utils.h"
+
+#include <stdint.h>
+#include <stdlib.h>
+#include <sys/types.h>
 
 typedef enum arg_parser_state_e {
   STATE_STDIN,
