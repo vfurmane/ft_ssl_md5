@@ -106,7 +106,8 @@ sha256_hash_t sha256_hash_static_string(const char *str) {
   unsigned char buffer[chunk_size];
 
   sha256_hash_t base_hash = {
-      .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
+      .a = 0xc1059ed8, .b = 0x367cd507, .c = 0x3070dd17, .d = 0xf70e5939,
+      .e = 0xffc00b31, .f = 0x68581511, .g = 0x64f98fa7, .h = 0xbefa4fa4,
   };
 
   const size_t len = ft_strlen(str);
