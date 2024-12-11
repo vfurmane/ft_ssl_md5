@@ -33,9 +33,25 @@ md5_message_chunk_word_t md5_hash_round3(
   return md5_hash_round_f(hash, message_chunk[g], k_table[i], f);
 }
 
+/**
+ * @brief Performs the fourth round of the MD5 hashing algorithm.
+ *
+ * @param hash The current MD5 hash state, represented as an `md5_hash_t`
+ * structure.
+ * @param message_chunk A single 512-bit message chunk represented as an
+ * `md5_message_chunk_t`.
+ * @param i The current round index. Must be less than 64.
+ * @return The result of the fourth MD5 round as an `md5_message_chunk_word_t`.
+ *
+ * @note The parameter `i` must satisfy `i < 64` to avoid undefined behavior, as
+ * it is used to access elements in the `k_table` array, which has a size of 64.
+ */
 md5_message_chunk_word_t md5_hash_round4(
     md5_hash_t hash, md5_message_chunk_t message_chunk, unsigned int i
 ) {
+  if (i >= 64) {
+    return 0;
+  }
   const md5_message_chunk_word_t f = hash.c ^ (hash.b | (~hash.d));
   const unsigned int g = (7 * i) % 16;
   return md5_hash_round_f(hash, message_chunk[g], k_table[i], f);
