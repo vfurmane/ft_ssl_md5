@@ -70,7 +70,7 @@ unsigned char *pad_chunk(unsigned char *buffer, size_t i, size_t len) {
 #define CURRENT_INDENT 1
 
   const size_t chunk_size = BUFFER_BITS_NBR / CHAR_BIT;
-  if (i + chunk_size < len) {
+  if (i + chunk_size <= len) {
     return buffer;
   }
 
