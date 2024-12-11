@@ -176,6 +176,13 @@ class TestMd5:
         assert result.returncode == 0, "return code should be 0 (ok)"
         assert result.stdout == 'MD5 (hello.txt) = 3adbbad1791fbae3ec908894c4963870\n', "output does not meet expectations"
 
+    def test_lorem_file(self, cli_path):
+        test_input = "lorem.txt"
+        result = subprocess.run(make_tested_command([cli_path, "md5", test_input], with_leak_check),
+                                text=True, capture_output=True)
+        assert result.returncode == 0, "return code should be 0 (ok)"
+        assert result.stdout == 'MD5 (lorem.txt) = 9ab92ccc0f9919855cf74bea764f9d5d\n', "output does not meet expectations"
+
     @pytest.mark.parametrize("test_input", test_inputs)
     def test_stdin(self, cli_path, test_input):
         result = subprocess.run(make_tested_command([cli_path, "md5"], with_leak_check),
