@@ -199,7 +199,7 @@ maybe_md5_hash_t md5_hash_fd(int fd, uint8_t should_print) {
     PRINT("reading %zd characters\n", ret);
 
     if (should_print) {
-      write_stdout(buffer, ret);
+      write_stdout_skip_newlines(buffer, ret);
     }
     total_len += ret;
     pad_chunk(buffer, i, total_len);

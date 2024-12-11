@@ -9,6 +9,18 @@ size_t putstr_stdout(const char *str) {
   return write_stdout(str, len);
 }
 
+size_t write_stdout_skip_newlines(const void *buf, size_t n) {
+  size_t len = 0;
+  const char *start = buf;
+  do {
+    const char *end = ft_strchr(start, '\n');
+    len += write_stdout(start, end - ((const char *)buf));
+    start = buf + len + 1;
+  } while (start - ((const char *)buf) < (ssize_t)n);
+
+  return len;
+}
+
 size_t write_stderr(const void *buf, size_t n) {
   return write(STDERR_FILENO, buf, n);
 }
