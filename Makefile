@@ -5,7 +5,10 @@ SRCS		= $(addprefix srcs/, main.c \
 				$(addprefix md5/, \
 					$(addprefix hash/, algorithm.c print.c) \
 					$(addprefix message/, allocation.c)) \
-				$(addprefix print/, binary.c hexadecimal.c md5.c write.c) \
+				$(addprefix sha256/, \
+					$(addprefix hash/, algorithm.c print.c) \
+					$(addprefix message/, allocation.c)) \
+				$(addprefix print/, binary.c hexadecimal.c md5.c sha256.c write.c) \
 				$(addprefix utils/, ft_bswap.c ft_bzero.c ft_memchr.c ft_memcpy.c ft_min_max.c ft_strcmp.c ft_strlen.c))
 INC_DIRS	= $(addprefix -I, includes/)
 OBJS		= $(SRCS:.c=.o)

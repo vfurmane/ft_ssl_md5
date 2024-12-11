@@ -1,7 +1,7 @@
 #include "print.h"
 
 void print_formatted_md5_hash(
-    const char *str, md5_hash_t hash, md5_config_t config, uint8_t with_quotes,
+    const char *str, md5_hash_t hash, config_t config, uint8_t with_quotes,
     uint8_t with_md5_prefix
 ) {
   if (!config.reverse) {
@@ -44,17 +44,17 @@ void print_formatted_md5_hash(
 }
 
 void print_md5_hashed_string(
-    const char *str, md5_hash_t hash, md5_config_t config
+    const char *str, md5_hash_t hash, config_t config
 ) {
   return print_formatted_md5_hash(str, hash, config, 1, 1);
 }
 
-void print_md5_hashed_stdin(md5_hash_t hash, md5_config_t config) {
+void print_md5_hashed_stdin(md5_hash_t hash, config_t config) {
   return print_formatted_md5_hash("stdin", hash, config, 0, 0);
 }
 
 void print_md5_hashed_file(
-    md5_hash_t hash, const char *file, md5_config_t config
+    md5_hash_t hash, const char *file, config_t config
 ) {
   return print_formatted_md5_hash(file, hash, config, 0, 1);
 }

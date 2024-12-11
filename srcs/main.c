@@ -1,6 +1,7 @@
 #include "args.h"
 #include "md5/hash.h"
 #include "print.h"
+#include "sha256/hash.h"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -11,8 +12,8 @@ int main(int argc, const char **argv) {
     return 1;
   }
 
-  if (ft_strcmp(argv[1], "md5") == 0) {
-    const md5_config_t config = parse_md5_args(argc, argv);
+  if (ft_strcmp(argv[1], "md5") == 0 || ft_strcmp(argv[1], "sha256") == 0) {
+    const config_t config = parse_args(argc, argv);
 
     arg_parser_state_t arg_parser_state = STATE_STDIN;
     for (int i = 2; i < argc; ++i) {
@@ -33,9 +34,15 @@ int main(int argc, const char **argv) {
           arg_parser_state = STATE_FILE;
         }
       } else if (arg_parser_state == STATE_STRING) {
-        const md5_hash_t hash = md5_hash_static_string(argv[i]);
-        print_md5_hashed_string(argv[i], hash, config);
-        arg_parser_state = STATE_INITIAL;
+        if (ft_strcmp(argv[1], "sha256") == 0) {
+          const sha256_hash_t hash = sha256_hash_static_string(argv[i]);
+          print_sha256_hashed_string(argv[i], hash, config);
+          arg_parser_state = STATE_INITIAL;
+        } else {
+          const md5_hash_t hash = md5_hash_static_string(argv[i]);
+          print_md5_hashed_string(argv[i], hash, config);
+          arg_parser_state = STATE_INITIAL;
+        }
       }
       if (arg_parser_state == STATE_FILE) {
         const int fd = open(argv[i], O_RDONLY);

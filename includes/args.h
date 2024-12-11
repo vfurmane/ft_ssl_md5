@@ -14,12 +14,12 @@ typedef enum arg_parser_state_e {
   STATE_FILE,
 } arg_parser_state_t;
 
-typedef struct md5_config_s {
+typedef struct config_s {
   uint8_t quiet;
   uint8_t reverse;
-} md5_config_t;
+} config_t;
 
-md5_config_t init_md5_config(void);
-md5_config_t parse_md5_args(int argc, const char **argv);
+config_t init_config(void);
+config_t parse_args(int argc, const char **argv);
 
 #endif
