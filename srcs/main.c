@@ -106,6 +106,12 @@ int main(int argc, const char **argv) {
         print_sha256_hashed_stdin(ret.hash, config);
       }
     }
+  } else {
+    putstr_stderr(argv[0]);
+    putstr_stderr(": ");
+    putstr_stderr(argv[1]);
+    putstr_stderr(": unknown command\n");
+    return 1;
   }
 
   return 0;
