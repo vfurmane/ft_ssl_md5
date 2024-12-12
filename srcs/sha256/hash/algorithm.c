@@ -64,19 +64,30 @@ sha256_message_chunk_word_t sha256_hash_round4(
 sha256_hash_t sha256_hash_chunk_round(
     sha256_hash_t hash, sha256_message_chunk_t message_chunk, unsigned int i
 ) {
-  const sha256_message_chunk_word_t f =
-      i < 16   ? sha256_hash_round1(hash, message_chunk, i)
-      : i < 32 ? sha256_hash_round2(hash, message_chunk, i)
-      : i < 48 ? sha256_hash_round3(hash, message_chunk, i)
-               : sha256_hash_round4(hash, message_chunk, i);
-  const sha256_message_chunk_word_t new_b =
-      hash.b + left_rotate(f, sha256_per_round_shifts[i]);
+  const sha256_message_chunk_word_t S1 = (right_rotate(hash.e, 6)) ^
+                                         (right_rotate(hash.e, 11)) ^
+                                         (right_rotate(hash.e, 25));
+  const sha256_message_chunk_word_t ch =
+      (hash.e & hash.f) ^ ((~hash.e) & hash.g);
+  const sha256_message_chunk_word_t T1 =
+      hash.h + S1 + ch + sha256_k_table[i] + message_chunk[i];
+
+  const sha256_message_chunk_word_t S0 = (right_rotate(hash.a, 2)) ^
+                                         (right_rotate(hash.a, 13)) ^
+                                         (right_rotate(hash.a, 22));
+  const sha256_message_chunk_word_t maj =
+      (hash.a & hash.b) ^ (hash.a & hash.c) ^ (hash.b & hash.c);
+  const sha256_message_chunk_word_t T2 = S0 + maj;
 
   const sha256_hash_t ret = {
-      .a = hash.d,
+      .h = hash.g,
+      .g = hash.f,
+      .f = hash.e,
+      .e = hash.d + T1,
       .d = hash.c,
       .c = hash.b,
-      .b = new_b,
+      .b = hash.a,
+      .a = T1 + T2
   };
   return ret;
 }
@@ -85,15 +96,42 @@ sha256_hash_t sha256_hash_chunk(
     sha256_hash_t base_hash, sha256_message_chunk_t message_chunk
 ) {
   sha256_hash_t hash = base_hash;
+  sha256_message_chunk_word_t schedule[BUFFER_BITS_NBR / CHAR_BIT];
+
+  ft_memcpy(schedule, message_chunk, sizeof(schedule));
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+  buffer_bswap_32(schedule, sizeof(schedule));
+#endif
+  for (size_t i = 16; i < 64; ++i) {
+    const sha256_message_chunk_word_t s0 =
+        (right_rotate(schedule[i - 15], 7)) ^
+        (right_rotate(schedule[i - 15], 18)) ^ (schedule[i - 15] >> 3);
+    const sha256_message_chunk_word_t s1 = (right_rotate(schedule[i - 2], 17)) ^
+                                           (right_rotate(schedule[i - 2], 19)) ^
+                                           (schedule[i - 2] >> 10);
+    schedule[i] = schedule[i - 16] + s0 + schedule[i - 7] + s1;
+  }
 
   for (size_t j = 0; j < 64; ++j) {
-    hash = sha256_hash_chunk_round(hash, message_chunk, j);
+#undef CURRENT_INDENT
+#define CURRENT_INDENT 3
+    PRINT("j = %zu\n", j);
+    hash = sha256_hash_chunk_round(hash, schedule, j);
+    PRINT(
+        "current hash: %#010x %#010x %#010x %#010x %#010x %#010x %#010x "
+        "%#010x\n",
+        hash.a, hash.b, hash.c, hash.d, hash.e, hash.f, hash.g, hash.h
+    );
   }
 
   base_hash.a += hash.a;
   base_hash.b += hash.b;
   base_hash.c += hash.c;
   base_hash.d += hash.d;
+  base_hash.e += hash.e;
+  base_hash.f += hash.f;
+  base_hash.g += hash.g;
+  base_hash.h += hash.h;
   return base_hash;
 }
 
@@ -106,23 +144,32 @@ sha256_hash_t sha256_hash_static_string(const char *str) {
   unsigned char buffer[chunk_size];
 
   sha256_hash_t base_hash = {
-      .a = 0xc1059ed8, .b = 0x367cd507, .c = 0x3070dd17, .d = 0xf70e5939,
-      .e = 0xffc00b31, .f = 0x68581511, .g = 0x64f98fa7, .h = 0xbefa4fa4,
+      .a = 0x6a09e667,
+      .b = 0xbb67ae85,
+      .c = 0x3c6ef372,
+      .d = 0xa54ff53a,
+      .e = 0x510e527f,
+      .f = 0x9b05688c,
+      .g = 0x1f83d9ab,
+      .h = 0x5be0cd19,
   };
 
   const size_t len = ft_strlen(str);
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 1
   PRINT("original message length: %zu\n", len);
-  const size_t total_message_len = get_required_sha256_bytes_nbr(len * CHAR_BIT);
+  const size_t total_message_len =
+      get_required_sha256_bytes_nbr(len * CHAR_BIT);
   PRINT("final message length: %zu\n", total_message_len);
   for (size_t i = 0; i < total_message_len; i += chunk_size) {
     PRINT("ROUND %zu\n", (i / chunk_size) + 1);
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 2
     PRINT(
-        "current hash: %#010x %#010x %#010x %#010x\n", base_hash.a, base_hash.b,
-        base_hash.c, base_hash.d
+        "current hash: %#010x %#010x %#010x %#010x %#010x %#010x %#010x "
+        "%#010x\n",
+        base_hash.a, base_hash.b, base_hash.c, base_hash.d, base_hash.e,
+        base_hash.f, base_hash.g, base_hash.h
     );
     const char *str_start = str + i;
     const size_t size = ft_max_size(ft_min_size(chunk_size, len - i), 0);
@@ -146,9 +193,11 @@ sha256_hash_t sha256_hash_static_string(const char *str) {
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 1
   PRINT(
-      "hash done: %#010x %#010x %#010x %#010x (endianness might be wrong "
+      "hash done: %#010x %#010x %#010x %#010x %#010x %#010x %#010x %#010x "
+      "(endianness might be wrong "
       "here)\n",
-      base_hash.a, base_hash.b, base_hash.c, base_hash.d
+      base_hash.a, base_hash.b, base_hash.c, base_hash.d, base_hash.e,
+      base_hash.f, base_hash.g, base_hash.h
   );
 
   return base_hash;
@@ -168,7 +217,14 @@ sha256_hash_fd(int fd, config_t config, uint8_t should_print) {
   size_t i = 0;
   ssize_t ret = 0;
   sha256_hash_t base_hash = {
-      .a = 0x67452301, .b = 0xefcdab89, .c = 0x98badcfe, .d = 0x10325476
+      .a = 0x6a09e667,
+      .b = 0xbb67ae85,
+      .c = 0x3c6ef372,
+      .d = 0xa54ff53a,
+      .e = 0x510e527f,
+      .f = 0x9b05688c,
+      .g = 0x1f83d9ab,
+      .h = 0x5be0cd19,
   };
 
   if (should_print && !config.quiet) {
@@ -181,8 +237,10 @@ sha256_hash_fd(int fd, config_t config, uint8_t should_print) {
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 2
     PRINT(
-        "current hash: %#010x %#010x %#010x %#010x\n", base_hash.a, base_hash.b,
-        base_hash.c, base_hash.d
+        "current hash: %#010x %#010x %#010x %#010x %#010x %#010x %#010x "
+        "%#010x\n",
+        base_hash.a, base_hash.b, base_hash.c, base_hash.d, base_hash.e,
+        base_hash.f, base_hash.g, base_hash.h
     );
 
     ret = read(fd, buffer, chunk_size);
@@ -222,9 +280,11 @@ sha256_hash_fd(int fd, config_t config, uint8_t should_print) {
 #undef CURRENT_INDENT
 #define CURRENT_INDENT 1
   PRINT(
-      "hash done: %#010x %#010x %#010x %#010x (endianness might be wrong "
+      "hash done: %#010x %#010x %#010x %#010x %#010x %#010x %#010x %#010x "
+      "(endianness might be wrong "
       "here)\n",
-      base_hash.a, base_hash.b, base_hash.c, base_hash.d
+      base_hash.a, base_hash.b, base_hash.c, base_hash.d, base_hash.e,
+      base_hash.f, base_hash.g, base_hash.h
   );
 
   result.some = 1;
