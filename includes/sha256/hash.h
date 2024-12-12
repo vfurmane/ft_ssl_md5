@@ -37,13 +37,6 @@ static const sha256_message_chunk_word_t sha256_k_table[] = {
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
 };
 
-static const unsigned int sha256_per_round_shifts[] = {
-    7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
-    5, 9,  14, 20, 5, 9,  14, 20, 5, 9,  14, 20, 5, 9,  14, 20,
-    4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
-    6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21
-};
-
 sha256_hash_t sha256_hash_static_string(const char *str);
 maybe_sha256_hash_t
 sha256_hash_fd(int fd, config_t config, uint8_t should_print);
