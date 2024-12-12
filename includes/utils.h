@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include "stdint.h"
 #include "stdlib.h"
 
 uint32_t ft_bswap_32(uint32_t x);
