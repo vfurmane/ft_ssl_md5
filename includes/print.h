@@ -28,4 +28,6 @@ void print_sha256_hashed_file(
     sha256_hash_t hash, const char *file, config_t config
 );
 
+void print_usage(const char *argv0);
+
 #endif

@@ -9,15 +9,7 @@
 
 int main(int argc, const char **argv) {
   if (argc == 1) {
-    putstr_stderr(argv[0]);
-    putstr_stderr(" command [-pqr] [-s string ...] [file ...]\n\n");
-    putstr_stderr(
-        "  -p, echo STDIN to STDOUT and append the checksum to STDOUT\n"
-    );
-    putstr_stderr("  -q, quiet mode\n");
-    putstr_stderr("  -r, reverse the format of the output\n");
-    putstr_stderr("  -s, print the sum of the given string\n");
-    putstr_stderr("\n");
+    print_usage(argv[0]);
     return 1;
   }
 
