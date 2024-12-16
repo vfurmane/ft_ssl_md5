@@ -215,7 +215,8 @@ sha256_hash_fd(int fd, config_t config, uint8_t should_print) {
 
   size_t total_len = 0;
   size_t i = 0;
-  ssize_t ret = 0;
+  ssize_t ret = 1;
+  size_t total_read = 0;
   sha256_hash_t base_hash = {
       .a = 0x6a09e667,
       .b = 0xbb67ae85,
@@ -243,17 +244,21 @@ sha256_hash_fd(int fd, config_t config, uint8_t should_print) {
         base_hash.f, base_hash.g, base_hash.h
     );
 
-    ret = read(fd, buffer, chunk_size);
-    if (ret < 0) {
-      PRINT("error on read, exiting%s\n", "");
-      return result;
+    total_read = 0;
+    while (ret > 0 && total_read < chunk_size) {
+      ret = read(fd, buffer + total_read, chunk_size - total_read);
+      if (ret < 0) {
+        PRINT("error on read, exiting%s\n", "");
+        return result;
+      }
+      PRINT("reading %zd characters\n", ret);
+      total_read += ret;
     }
-    PRINT("reading %zd characters\n", ret);
 
     if (should_print) {
-      write_stdout_skip_newlines(buffer, ret);
+      write_stdout_skip_newlines(buffer, total_read);
     }
-    total_len += ret;
+    total_len += total_read;
     pad_sha256_chunk(buffer, i, total_len);
 
     PRINT("static buffer --v%s\n", "");
@@ -269,7 +274,7 @@ sha256_hash_fd(int fd, config_t config, uint8_t should_print) {
     base_hash = sha256_hash_chunk(base_hash, (sha256_message_chunk_t)buffer);
 
     i += chunk_size;
-  } while ((size_t)ret >= (chunk_size - (LENGTH_PADDING_BITS_NBR / CHAR_BIT)));
+  } while (total_read >= (chunk_size - (LENGTH_PADDING_BITS_NBR / CHAR_BIT)));
   if (should_print) {
     if (config.quiet) {
       putstr_stdout("\n");
