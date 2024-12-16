@@ -7,6 +7,10 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
+#define ALGO_LIST                                                              \
+  X(md5)                                                                       \
+  X(sha256)
+
 typedef enum arg_parser_state_e {
   STATE_STDIN,
   STATE_INITIAL,
