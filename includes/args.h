@@ -23,6 +23,8 @@ typedef struct config_s {
   uint8_t reverse;
 } config_t;
 
+int dispatch_command_args(int argc, const char **argv);
+
 config_t init_config(void);
 config_t parse_args(int argc, const char **argv);
 
